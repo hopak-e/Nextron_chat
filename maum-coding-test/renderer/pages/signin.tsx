@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { signInWithEmailAndPassword } from "firebase/auth";
-
 import { auth } from "../firebase";
+
 import Input from "../components/shared/input";
 import Button from "../components/shared/button";
 
-export default function Signin() {
+export default function SignIn() {
   const [signinInfo, setSigninInfo] = useState({
     email: "",
     password: "",
@@ -27,10 +27,11 @@ export default function Signin() {
     e.preventDefault();
     try {
       const user = await signInWithEmailAndPassword(auth, email, password);
-      console.log(user);
-      if (window.confirm("로그인이 완료되었습니다!")) {
-        window.location.href = "/home";
-      }
+      await localStorage.setItem("uid", user.user.uid);
+      user.user.displayName &&
+        localStorage.setItem("displayName", user.user.displayName);
+      const relocate = () => (window.location.href = "/home");
+      await relocate();
     } catch (error) {
       alert("아이디 혹은 비밀번호를 확인해주세요.");
       setSigninInfo({ email: "", password: "" });
@@ -71,6 +72,7 @@ export default function Signin() {
                   &nbsp;회원가입
                 </span>
               </Link>
+              <Link href="/home">홈으로 이동</Link>
             </div>
           </div>
         </form>
