@@ -6,7 +6,7 @@ export default function Footer() {
 
   return (
     <React.Fragment>
-      <div className="flex h-10 cursor-pointer">
+      <div className="flex h-12 cursor-pointer fixed bottom-0 w-full">
         <div
           className={`flex-1 flex justify-center items-center w-full border-r-2  ${
             router.pathname === "/home" ? "bg-pink" : "bg-red-300"
