@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { addDoc, doc, collection } from "firebase/firestore";
 
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
 import Input from "../components/shared/input";
 import Button from "../components/shared/button";
 
@@ -90,13 +91,22 @@ export default function Signup() {
     }
   }, [nickname]);
 
-  const register = async (e: React.FormEvent<HTMLFormElement>) => {
+  const onSignUpSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const userListRef = doc(db, "users", "userList");
     try {
       const user = await createUserWithEmailAndPassword(auth, email, password);
-      console.log(user);
       await updateProfile(user.user, { displayName: nickname });
-      console.log(user);
+      await addDoc(collection(db, "users"), {
+        displayName: user.user.displayName,
+        uid: user.user.uid,
+      });
+
+      // await setDoc(userListRef, {
+      //   ...userListRef,
+      //   displayName: user.user.displayName,
+      //   uid: user.user.uid,
+      // });
       if (window.confirm("회원가입이 완료되었습니다!")) {
         window.location.href = "/signin";
       }
@@ -105,6 +115,7 @@ export default function Signup() {
       console.log(error);
     }
   };
+
   return (
     <React.Fragment>
       <Head>
@@ -113,7 +124,7 @@ export default function Signup() {
       <div className="flex flex-col text-start items-center w-full h-screen">
         <form
           className="flex flex-col justify-center w-4/5 h-full p-6"
-          onSubmit={register}
+          onSubmit={onSignUpSubmit}
         >
           <div className="flex flex-col justify-center border-2 rounded-lg h-4/5 p-6 gap-y-4">
             <label className="text-xl">회원가입</label>
