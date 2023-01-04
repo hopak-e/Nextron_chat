@@ -21,7 +21,7 @@ export default function Footer() {
           }`}
           onClick={() => router.push("/chatList")}
         >
-          <img className="w-6 h-6" src="/images/user.png" />
+          <img className="w-6 h-6" src="/images/chat.png" />
         </div>
       </div>
     </React.Fragment>
