@@ -73,6 +73,14 @@ function Home() {
     }
   };
 
+  const handleSignOutClick = async () => {
+    if (window.confirm("로그아웃 하시겠습니까?")) {
+      localStorage.removeItem("uid");
+      localStorage.removeItem("displayName");
+      await router.push("/signin");
+    }
+  };
+
   return (
     <React.Fragment>
       <Head>
@@ -80,6 +88,9 @@ function Home() {
       </Head>
       <div className="h-screen">
         <Header>
+          <button className="absolute left-2" onClick={handleSignOutClick}>
+            로그아웃
+          </button>
           유저목록
           <button className="absolute right-2" onClick={handleCreateChatClick}>
             채팅 생성
