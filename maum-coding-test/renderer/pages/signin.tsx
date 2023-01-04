@@ -72,7 +72,6 @@ export default function SignIn() {
                   &nbsp;회원가입
                 </span>
               </Link>
-              <Link href="/home">홈으로 이동</Link>
             </div>
           </div>
         </form>

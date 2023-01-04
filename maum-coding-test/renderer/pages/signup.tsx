@@ -4,6 +4,7 @@ import Link from "next/link";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { addDoc, doc, collection } from "firebase/firestore";
 
+import useValidation from "../hooks/useValidation";
 import { auth, db } from "../firebase";
 import Input from "../components/shared/input";
 import Button from "../components/shared/button";
@@ -15,20 +16,10 @@ export default function Signup() {
     password: "",
     confirmPassword: "",
   });
-  const [validText, setValidText] = useState({
-    email: "",
-    nickname: "",
-    password: "",
-    confirmPassword: "",
-  });
-  const [isValidation, setIsValidation] = useState({
-    email: true,
-    nickname: true,
-    password: true,
-    confirmPassword: true,
-  });
 
   const { email, nickname, password, confirmPassword } = signupInfo;
+
+  const { validText, isValidation } = useValidation(signupInfo);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -38,62 +29,8 @@ export default function Signup() {
     });
   };
 
-  useEffect(() => {
-    const emailRegex = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
-    if (email.length > 0 && emailRegex.test(email) === false) {
-      setIsValidation({ ...isValidation, email: false });
-      setValidText({
-        ...validText,
-        email: "올바른 이메일 형식으로 입력해주세요.",
-      });
-    } else {
-      setIsValidation({ ...isValidation, email: true });
-      setValidText({ ...validText, email: "" });
-    }
-  }, [email]);
-
-  useEffect(() => {
-    if (password.length && password.length < 6) {
-      setIsValidation({ ...isValidation, password: false });
-      setValidText({
-        ...validText,
-        password: "비밀번호 6자 이상이어야 합니다.",
-      });
-    } else {
-      setIsValidation({ ...isValidation, confirmPassword: true });
-      setValidText({ ...validText, confirmPassword: "" });
-    }
-  }, [password]);
-
-  useEffect(() => {
-    if (confirmPassword.length > 0 && password !== confirmPassword) {
-      setIsValidation({ ...isValidation, confirmPassword: false });
-      setValidText({
-        ...validText,
-        confirmPassword: "비밀번호가 일치하지 않습니다.",
-      });
-    } else {
-      setIsValidation({ ...isValidation, confirmPassword: true });
-      setValidText({ ...validText, confirmPassword: "" });
-    }
-  }, [password, confirmPassword]);
-
-  useEffect(() => {
-    if (nickname.length > 0 && (nickname.length < 2 || nickname.length > 8)) {
-      setIsValidation({ ...isValidation, nickname: false });
-      setValidText({
-        ...validText,
-        nickname: "닉네임은 2~8 글자로 설정해야 합니다.",
-      });
-    } else {
-      setIsValidation({ ...isValidation, nickname: true });
-      setValidText({ ...validText, nickname: "" });
-    }
-  }, [nickname]);
-
   const onSignUpSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const userListRef = doc(db, "users", "userList");
     try {
       const user = await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(user.user, { displayName: nickname });
@@ -101,12 +38,6 @@ export default function Signup() {
         displayName: user.user.displayName,
         uid: user.user.uid,
       });
-
-      // await setDoc(userListRef, {
-      //   ...userListRef,
-      //   displayName: user.user.displayName,
-      //   uid: user.user.uid,
-      // });
       if (window.confirm("회원가입이 완료되었습니다!")) {
         window.location.href = "/signin";
       }
