@@ -6,6 +6,7 @@ import { auth } from "../firebase";
 
 import Input from "../components/shared/input";
 import Button from "../components/shared/button";
+import { useRouter } from "next/router";
 
 export default function SignIn() {
   const [signinInfo, setSigninInfo] = useState({
@@ -13,9 +14,11 @@ export default function SignIn() {
     password: "",
   });
 
+  const router = useRouter();
+
   const { email, password } = signinInfo;
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSignInInfoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setSigninInfo({
       ...signinInfo,
@@ -23,15 +26,14 @@ export default function SignIn() {
     });
   };
 
-  const signin = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSignInSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const user = await signInWithEmailAndPassword(auth, email, password);
       await localStorage.setItem("uid", user.user.uid);
       user.user.displayName &&
         localStorage.setItem("displayName", user.user.displayName);
-      const relocate = () => (window.location.href = "/home");
-      await relocate();
+      await router.push("/home");
     } catch (error) {
       alert("아이디 혹은 비밀번호를 확인해주세요.");
       setSigninInfo({ email: "", password: "" });
@@ -46,7 +48,7 @@ export default function SignIn() {
       <div className="flex flex-col text-start items-center w-full h-screen">
         <form
           className="flex flex-col justify-center w-4/5 h-full p-6"
-          onSubmit={signin}
+          onSubmit={handleSignInSubmit}
         >
           <div className="flex flex-col justify-center border-2 rounded-lg h-3/5 p-6 gap-y-4">
             <label className="text-xl">로그인</label>
@@ -55,14 +57,14 @@ export default function SignIn() {
               type="email"
               placeholder="이메일을 입력해주세요."
               value={email}
-              onChange={onChange}
+              onChange={handleSignInInfoChange}
             />
             <Input
               name="password"
               type="password"
               placeholder="비밀번호를 입력해주세요."
               value={password}
-              onChange={onChange}
+              onChange={handleSignInInfoChange}
             />
             <Button>로그인</Button>
             <div className="text-gray-400">
