@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { addDoc, doc, collection } from "firebase/firestore";
+import { addDoc, collection } from "firebase/firestore";
 
 import useValidation from "../hooks/useValidation";
 import { auth, db } from "../firebase";
@@ -21,7 +21,7 @@ export default function Signup() {
 
   const { validText, isValidation } = useValidation(signupInfo);
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSignUpInfoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setSignupInfo({
       ...signupInfo,
@@ -29,7 +29,7 @@ export default function Signup() {
     });
   };
 
-  const onSignUpSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSignUpSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const user = await createUserWithEmailAndPassword(auth, email, password);
@@ -55,7 +55,7 @@ export default function Signup() {
       <div className="flex flex-col text-start items-center w-full h-screen">
         <form
           className="flex flex-col justify-center w-4/5 h-full p-6"
-          onSubmit={onSignUpSubmit}
+          onSubmit={handleSignUpSubmit}
         >
           <div className="flex flex-col justify-center border-2 rounded-lg h-4/5 p-6 gap-y-4">
             <label className="text-xl">회원가입</label>
@@ -64,7 +64,7 @@ export default function Signup() {
               type="email"
               placeholder="이메일을 입력해주세요"
               value={email}
-              onChange={onChange}
+              onChange={handleSignUpInfoChange}
             />
             {isValidation.email || (
               <p className="text-xs text-red-400 pl-2">{validText.email}</p>
@@ -73,7 +73,7 @@ export default function Signup() {
               name="nickname"
               placeholder="닉네임을 입력해주세요"
               value={nickname}
-              onChange={onChange}
+              onChange={handleSignUpInfoChange}
             />
             {isValidation.nickname || (
               <p className="text-xs text-red-400 pl-2">{validText.nickname}</p>
@@ -83,7 +83,7 @@ export default function Signup() {
               type="password"
               placeholder="비밀번호를 입력해주세요"
               value={password}
-              onChange={onChange}
+              onChange={handleSignUpInfoChange}
             />
             {isValidation.password || (
               <p className="text-xs text-red-400 pl-2">{validText.password}</p>
@@ -93,7 +93,7 @@ export default function Signup() {
               type="password"
               placeholder="비밀번호 확인"
               value={confirmPassword}
-              onChange={onChange}
+              onChange={handleSignUpInfoChange}
             />
             {isValidation.confirmPassword || (
               <p className="text-xs text-red-400 pl-2">

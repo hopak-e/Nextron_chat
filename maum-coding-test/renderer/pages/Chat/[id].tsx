@@ -37,9 +37,10 @@ export default function Chat() {
     }
   }, [input]);
 
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleAddMessageSubmit = async (
+    e: React.FormEvent<HTMLFormElement>
+  ) => {
     e.preventDefault();
-    const q = doc(db, "chats", "messages");
     const addMessage = await updateDoc(doc(db, "chats", `${id}`), {
       messages: [
         ...message,
@@ -102,7 +103,7 @@ export default function Chat() {
       </div>
       <form
         className="flex items-center fixed bottom-0 w-full bg-gray-300 h-12"
-        onSubmit={onSubmit}
+        onSubmit={handleAddMessageSubmit}
       >
         <input
           placeholder="내용을 입력하세요"
