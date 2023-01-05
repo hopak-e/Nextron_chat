@@ -15,12 +15,11 @@ export default function useValidation(signupInfo: SignUpInfo) {
     confirmPassword: true,
   });
 
+  const { email, nickname, password, confirmPassword } = signupInfo;
+
   useEffect(() => {
     const emailRegex = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
-    if (
-      signupInfo.email.length > 0 &&
-      emailRegex.test(signupInfo.email) === false
-    ) {
+    if (email.length > 0 && emailRegex.test(email) === false) {
       setIsValidation({ ...isValidation, email: false });
       setValidText({
         ...validText,
@@ -30,10 +29,10 @@ export default function useValidation(signupInfo: SignUpInfo) {
       setIsValidation({ ...isValidation, email: true });
       setValidText({ ...validText, email: "" });
     }
-  }, [signupInfo.email]);
+  }, [email]);
 
   useEffect(() => {
-    if (signupInfo.password.length > 0 && signupInfo.password.length < 6) {
+    if (password.length > 0 && password.length < 6) {
       setIsValidation({ ...isValidation, password: false });
       setValidText({
         ...validText,
@@ -43,13 +42,10 @@ export default function useValidation(signupInfo: SignUpInfo) {
       setIsValidation({ ...isValidation, password: true });
       setValidText({ ...validText, password: "" });
     }
-  }, [signupInfo.password]);
+  }, [password]);
 
   useEffect(() => {
-    if (
-      signupInfo.confirmPassword.length > 0 &&
-      signupInfo.password !== signupInfo.confirmPassword
-    ) {
+    if (confirmPassword.length > 0 && password !== confirmPassword) {
       setIsValidation({ ...isValidation, confirmPassword: false });
       setValidText({
         ...validText,
@@ -59,13 +55,10 @@ export default function useValidation(signupInfo: SignUpInfo) {
       setIsValidation({ ...isValidation, confirmPassword: true });
       setValidText({ ...validText, confirmPassword: "" });
     }
-  }, [signupInfo.password, signupInfo.confirmPassword]);
+  }, [password, confirmPassword]);
 
   useEffect(() => {
-    if (
-      signupInfo.nickname.length > 0 &&
-      (signupInfo.nickname.length < 2 || signupInfo.nickname.length > 8)
-    ) {
+    if (nickname.length > 0 && (nickname.length < 2 || nickname.length > 8)) {
       setIsValidation({ ...isValidation, nickname: false });
       setValidText({
         ...validText,
@@ -75,7 +68,7 @@ export default function useValidation(signupInfo: SignUpInfo) {
       setIsValidation({ ...isValidation, nickname: true });
       setValidText({ ...validText, nickname: "" });
     }
-  }, [signupInfo.nickname]);
+  }, [nickname]);
 
   return { validText, isValidation };
 }
