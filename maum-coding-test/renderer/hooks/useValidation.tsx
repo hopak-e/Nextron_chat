@@ -55,7 +55,7 @@ export default function useValidation(signupInfo: SignUpInfo) {
       setIsValidation({ ...isValidation, confirmPassword: true });
       setValidText({ ...validText, confirmPassword: "" });
     }
-  }, [password, confirmPassword]);
+  }, [confirmPassword]);
 
   useEffect(() => {
     if (nickname.length > 0 && (nickname.length < 2 || nickname.length > 8)) {
